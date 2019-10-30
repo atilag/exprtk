@@ -81,8 +81,29 @@ namespace exprtk
       #define exprtk_disable_fallthrough_end   (void)0;
    #endif
 
+   template<typename T>
+   inline bool operator <(const std::complex<T>& lhs, const std::complex<T>& rhs){
+      throw std::logic_error("Cannot compare with < two complex numbers");
+   }
+
+   template<typename T>
+   inline bool operator <=(const std::complex<T>& lhs, const std::complex<T>& rhs){
+      throw std::logic_error("Cannot compare with <= two complex numbers");
+   }
+
+   template<typename T>
+   bool operator >(const std::complex<T>& lhs, const std::complex<T>& rhs){
+      throw std::logic_error("Cannot compare with > two complex numbers");
+   }
+
+   template<typename T>
+   bool operator >=(const std::complex<T>& lhs, const std::complex<T>& rhs){
+      throw std::logic_error("Cannot compare with >= two complex numbers");
+   }
+
    namespace details
    {
+
       typedef unsigned char     uchar_t;
       typedef char               char_t;
       typedef uchar_t*        uchar_ptr;
@@ -839,6 +860,12 @@ namespace exprtk
             }
 
             template <typename T>
+            inline int to_int32_impl(const T v, complex_type_tag)
+            {
+               throw std::logic_error("Cannot converto to int32 a complex number!");
+            }
+
+            template <typename T>
             inline int to_int32_impl(const T v, real_type_tag)
             {
                return static_cast<int>(v);
@@ -866,6 +893,12 @@ namespace exprtk
             inline T abs_impl(const T v, real_type_tag)
             {
                return ((v < T(0)) ? -v : v);
+            }
+
+            template <typename T>
+            inline T abs_impl(const T v, complex_type_tag)
+            {
+               return (std::abs(v));
             }
 
             template <typename T>
@@ -897,6 +930,12 @@ namespace exprtk
             inline T equal_impl(const T v0, const T v1, int_type_tag)
             {
                return (v0 == v1) ? 1 : 0;
+            }
+
+            template <typename T>
+            inline T expm1_impl(const T v, complex_type_tag)
+            {
+               throw std::logic_error("No exmp1 impl for complex numbers!");
             }
 
             template <typename T>
@@ -937,6 +976,12 @@ namespace exprtk
             }
 
             template <typename T>
+            inline T modulus_impl(const T v0, const T v1, complex_type_tag)
+            {
+               throw std::logic_error("No modulus impl for complex numbers!");
+            }
+
+            template <typename T>
             inline T modulus_impl(const T v0, const T v1, real_type_tag)
             {
                return std::fmod(v0,v1);
@@ -946,6 +991,12 @@ namespace exprtk
             inline T modulus_impl(const T v0, const T v1, int_type_tag)
             {
                return v0 % v1;
+            }
+
+            template <typename T>
+            inline T pow_impl(const T v0, const T v1, complex_type_tag)
+            {
+               throw std::logic_error("No pow impl for complex numbers!");
             }
 
             template <typename T>
@@ -997,6 +1048,12 @@ namespace exprtk
                }
                else
                   return std::numeric_limits<T>::quiet_NaN();
+            }
+
+            template <typename T>
+            inline T log1p_impl(const T v, complex_type_tag)
+            {
+               throw std::logic_error("No log1p impl for complex numbers");
             }
 
             template <typename T>
@@ -1092,6 +1149,12 @@ namespace exprtk
             }
 
             template <typename T>
+            inline T sgn_impl(const T v, complex_type_tag)
+            {
+               throw std::logic_error("No sgn impl for complex numbers!");
+            }
+
+            template <typename T>
             inline T sgn_impl(const T v, real_type_tag)
             {
                     if (v > T(0)) return T(+1);
@@ -1156,6 +1219,12 @@ namespace exprtk
             }
 
             template <typename T>
+            inline T xor_impl(const T v0, const T v1, complex_type_tag)
+            {
+               throw std::logic_error("No xor impl for complex numbers!");
+            }
+
+            template <typename T>
             inline T xor_impl(const T v0, const T v1, real_type_tag)
             {
                return (is_false_impl(v0) != is_false_impl(v1)) ? T(1) : T(0);
@@ -1165,6 +1234,12 @@ namespace exprtk
             inline T xor_impl(const T v0, const T v1, int_type_tag)
             {
                return v0 ^ v1;
+            }
+
+            template <typename T>
+            inline T xnor_impl(const T v0, const T v1, complex_type_tag)
+            {
+               throw std::logic_error("No xnor impl for complex numbers!");
             }
 
             template <typename T>
@@ -1200,6 +1275,12 @@ namespace exprtk
             exprtk_define_erf(long double,::erfl)
             #undef exprtk_define_erf
             #endif
+
+            template <typename T>
+            inline T erf_impl(T v, complex_type_tag)
+            {
+               throw std::logic_error("No erf impl for complex numbers!");
+            }
 
             template <typename T>
             inline T erf_impl(T v, real_type_tag)
@@ -1246,6 +1327,12 @@ namespace exprtk
             #endif
 
             template <typename T>
+            inline T erfc_impl(T v, complex_type_tag)
+            {
+               throw std::logic_error("No erfc impl for complex numbers!");
+            }
+
+            template <typename T>
             inline T erfc_impl(T v, real_type_tag)
             {
                #if defined(_MSC_VER) && (_MSC_VER < 1900)
@@ -1259,6 +1346,12 @@ namespace exprtk
             inline T erfc_impl(T v, int_type_tag)
             {
                return erfc_impl(static_cast<double>(v),real_type_tag());
+            }
+
+            template <typename T>
+            inline T ncdf_impl(T v, complex_type_tag)
+            {
+               throw std::logic_error("No nfcd impl for complex numbers");
             }
 
             template <typename T>
@@ -1277,6 +1370,12 @@ namespace exprtk
             }
 
             template <typename T>
+            inline T sinc_impl(T v, complex_type_tag)
+            {
+               throw std::logic_error("No sinc impl for complex numbers");
+            }
+
+            template <typename T>
             inline T sinc_impl(T v, real_type_tag)
             {
                if (std::abs(v) >= std::numeric_limits<T>::epsilon())
@@ -1290,6 +1389,40 @@ namespace exprtk
             {
                return sinc_impl(static_cast<double>(v),real_type_tag());
             }
+
+            template <typename T> inline T  acos_impl(const T v, complex_type_tag) { return std::acos (v); }
+            template <typename T> inline T acosh_impl(const T v, complex_type_tag) { return std::acosh (v); }
+            template <typename T> inline T  asin_impl(const T v, complex_type_tag) { return std::asin (v); }
+            template <typename T> inline T asinh_impl(const T v, complex_type_tag) { return std::asinh (v); }
+            template <typename T> inline T  atan_impl(const T v, complex_type_tag) { return std::atan (v); }
+            template <typename T> inline T atanh_impl(const T v, complex_type_tag) { return std::atanh (v); }
+            template <typename T> inline T  ceil_impl(const T v, complex_type_tag) { throw std::logic_error("Ceil can't be applied to Complex numbers"); }
+            template <typename T> inline T   cos_impl(const T v, complex_type_tag) { return std::cos  (v); }
+            template <typename T> inline T  cosh_impl(const T v, complex_type_tag) { return std::cosh (v); }
+            template <typename T> inline T   exp_impl(const T v, complex_type_tag) { return std::exp  (v); }
+            template <typename T> inline T floor_impl(const T v, complex_type_tag) { throw std::logic_error("floor can't be applied to Complex numbers"); }
+            template <typename T> inline T round_impl(const T v, complex_type_tag) { throw std::logic_error("round can't be applied to Complex numbers"); }
+            template <typename T> inline T   log_impl(const T v, complex_type_tag) { return std::log  (v); }
+            template <typename T> inline T log10_impl(const T v, complex_type_tag) { return std::log10(v); }
+            template <typename T> inline T  log2_impl(const T v, complex_type_tag) { throw std::logic_error("log2 can't be applied to Complex numbers"); }
+            template <typename T> inline T   neg_impl(const T v, complex_type_tag) { return -v;            }
+            template <typename T> inline T   pos_impl(const T v, complex_type_tag) { return +v;            }
+            template <typename T> inline T   sin_impl(const T v, complex_type_tag) { return std::sin  (v); }
+            template <typename T> inline T  sinh_impl(const T v, complex_type_tag) { return std::sinh (v); }
+            template <typename T> inline T  sqrt_impl(const T v, complex_type_tag) { return std::sqrt (v); }
+            template <typename T> inline T   tan_impl(const T v, complex_type_tag) { return std::tan  (v); }
+            template <typename T> inline T  tanh_impl(const T v, complex_type_tag) { return std::tanh (v); }
+            template <typename T> inline T   cot_impl(const T v, complex_type_tag) { throw std::logic_error("cot can't be applied to Complex numbers"); }
+            template <typename T> inline T   sec_impl(const T v, complex_type_tag) { throw std::logic_error("sec can't be applied to Complex numbers"); }
+            template <typename T> inline T   csc_impl(const T v, complex_type_tag) { throw std::logic_error("csc can't be applied to Complex numbers"); }
+            template <typename T> inline T   r2d_impl(const T v, complex_type_tag) { throw std::logic_error("rd2 can't be applied to Complex numbers"); }
+            template <typename T> inline T   d2r_impl(const T v, complex_type_tag) { throw std::logic_error("d2r can't be applied to Complex numbers"); }
+            template <typename T> inline T   d2g_impl(const T v, complex_type_tag) { throw std::logic_error("d2g can't be applied to Complex numbers"); }
+            template <typename T> inline T   g2d_impl(const T v, complex_type_tag) { throw std::logic_error("g2d can't be applied to Complex numbers"); }
+            template <typename T> inline T  notl_impl(const T v, complex_type_tag) { throw std::logic_error("notl can't be applied to Complex numbers"); }
+            template <typename T> inline T  frac_impl(const T v, complex_type_tag) { throw std::logic_error("frac can't be applied to Complex numbers"); }
+            template <typename T> inline T trunc_impl(const T v, complex_type_tag) { throw std::logic_error("trunc can't be applied to Complex numbers"); }
+
 
             template <typename T> inline T  acos_impl(const T v, real_type_tag) { return std::acos (v); }
             template <typename T> inline T acosh_impl(const T v, real_type_tag) { return std::log(v + std::sqrt((v * v) - T(1))); }
@@ -1355,6 +1488,12 @@ namespace exprtk
             template <typename T> inline T   cot_impl(const T  , int_type_tag) { return std::numeric_limits<T>::quiet_NaN(); }
             template <typename T> inline T   sec_impl(const T  , int_type_tag) { return std::numeric_limits<T>::quiet_NaN(); }
             template <typename T> inline T   csc_impl(const T  , int_type_tag) { return std::numeric_limits<T>::quiet_NaN(); }
+
+            template <typename T>
+            inline bool is_integer_impl(const T& v, complex_type_tag)
+            {
+               return false;
+            }
 
             template <typename T>
             inline bool is_integer_impl(const T& v, real_type_tag)
@@ -1997,6 +2136,15 @@ namespace exprtk
          char_cptr end   = s.data() + s.size();
 
          return string_to_real(begin, end, t, num_type);
+      }
+
+      #include <sstream>
+      template <typename T>
+      inline bool string_to_complex(const std::string& s, T& t)
+      {
+         std::istringstream is('(' + s + ')');
+         is >> t;
+         return true;
       }
 
       template <typename T>
@@ -12154,6 +12302,8 @@ namespace exprtk
          static inline typename expression_node<T>::node_type type() { return expression_node<T>::e_pow; }
          static inline details::operator_type operation() { return details::e_pow; }
       };
+
+
 
       template <typename T>
       struct lt_op : public opr_base<T>
@@ -25690,8 +25840,17 @@ namespace exprtk
          if (token_t::e_number == current_token().type)
          {
             T numeric_value = T(0);
+            const auto string_to_number = [](const std::string& tk, T& num) -> bool
+            {
+               // <JUAN> complex of doubles is the only thing we care at QC
+               if(std::is_same<T, std::complex<double>>::value)
+               {
+                  return details::string_to_complex(tk, num);
+               }
+               return details::string_to_real(tk, num);
+            };
 
-            if (details::string_to_real(current_token().value, numeric_value))
+            if (string_to_number(current_token().value, numeric_value))
             {
                expression_node_ptr literal_exp = expression_generator_(numeric_value);
 
